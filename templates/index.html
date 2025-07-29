@@ -11,8 +11,13 @@
         <button type="submit">Diagnose</button>
     </form>
 
-    {% if result %}
-        <h2>Diagnosis: {{ result }}</h2>
+    {% if diagnosis.condition %}
+        <h2>Diagnosis Result</h2>
+        <p><strong>Condition:</strong> {{ diagnosis.condition }}</p>
+        <p><strong>Possible Causes:</strong> {{ diagnosis.causes }}</p>
+        <p><strong>Treatment:</strong> {{ diagnosis.treatment }}</p>
+        <p><strong>Doctor Advice:</strong> {{ diagnosis.advice }}</p>
     {% endif %}
 </body>
 </html>
+
