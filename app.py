@@ -6,21 +6,44 @@ app = Flask(__name__)
 
 def diagnose(symptom):
     responses = {
-        "fever": "You may have the flu or viral infection.",
-        "cough": "Possible cold, bronchitis, or COVID-19.",
-        "headache": "Might be a migraine, tension, or dehydration.",
-        "stomach pain": "Could be indigestion or gastric issue.",
+          "fever": {
+            "condition": "Flu or Viral Infection",
+            "causes": "Infection by virus or bacteria, seasonal flu",
+            "treatment": "Rest, hydration, paracetamol for fever, consult doctor if persistent",
+            "advice": "Monitor temperature regularly. Seek medical help if fever lasts more than 3 days."
+        },
+        "cough": {
+            "condition": "Cold, Bronchitis, or COVID-19",
+            "causes": "Viral infection, dust, pollution, or allergies",
+            "treatment": "Cough syrup, steam inhalation, stay hydrated",
+            "advice": "If cough lasts >7 days or accompanied by fever, consult a doctor."
+        },
+        "headache": {
+            "condition": "Migraine or Dehydration",
+            "causes": "Stress, dehydration, eye strain, or lack of sleep",
+            "treatment": "Drink water, rest in a dark room, take a pain reliever",
+            "advice": "Avoid screens, get good sleep. Visit doctor if headaches are frequent."
+        },
+        "stomach pain": {
+            "condition": "Indigestion or Gastric issue",
+            "causes": "Overeating, food poisoning, acidity",
+            "treatment": "Antacids, drink warm water, avoid oily/spicy food",
+            "advice": "If pain is severe or you have vomiting/diarrhea, consult a physician."
+        }
+        
     }
-    return responses.get(symptom.lower(), "Please consult a doctor for accurate diagnosis.")
-
+     return responses.get(symptom.lower(), {
+        "condition": "Unknown",
+        "causes": "Unrecognized symptom",
+        "treatment": "Consult a medical professional.",
+        "advice": "Please see a doctor for accurate diagnosis."
+    })
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    result = ""
+    diagnosis = {}
     if request.method == 'POST':
         symptom = request.form.get('symptom')
-        result = diagnose(symptom)
-    return render_template('index.html', result=result)
+        diagnosis = diagnose(symptom)
+    return render_template('index.html', diagnosis=diagnosis)
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='0.0.0.0', port=port)
+
