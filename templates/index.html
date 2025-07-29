@@ -2,22 +2,94 @@
 <html>
 <head>
     <title>Smart Health Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .result {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .icon {
+            font-size: 30px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Health Diagnosis Bot</h1>
+
+    <h1>🤖 Smart Health Bot</h1>
+
     <form method="POST">
-        <label for="symptom">Enter your symptom:</label>
-        <input type="text" name="symptom" id="symptom" required>
+        <label for="symptom">Select or Speak Your Symptom:</label><br>
+        <select name="symptom" id="symptom">
+            <option value="">-- Select Symptom --</option>
+            <option value="fever">Fever</option>
+            <option value="cough">Cough</option>
+            <option value="headache">Headache</option>
+            <option value="stomach pain">Stomach Pain</option>
+        </select>
+
+        <input type="text" id="voiceInput" name="symptom" placeholder="Or say your symptom..." />
+
         <button type="submit">Diagnose</button>
+        <button type="button" onclick="startListening()">🎤 Speak</button>
     </form>
 
     {% if diagnosis.condition %}
-        <h2>Diagnosis Result</h2>
-        <p><strong>Condition:</strong> {{ diagnosis.condition }}</p>
-        <p><strong>Possible Causes:</strong> {{ diagnosis.causes }}</p>
-        <p><strong>Treatment:</strong> {{ diagnosis.treatment }}</p>
-        <p><strong>Doctor Advice:</strong> {{ diagnosis.advice }}</p>
+    <div class="result">
+        <h2 class="icon">🩺 Condition: {{ diagnosis.condition }}</h2>
+        <p><strong>🧪 Causes:</strong> {{ diagnosis.causes }}</p>
+        <p><strong>💊 Treatment:</strong> {{ diagnosis.treatment }}</p>
+        <p><strong>👨‍⚕️ Advice:</strong> {{ diagnosis.advice }}</p>
+    </div>
     {% endif %}
+
+    <script>
+        function startListening() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                document.getElementById('voiceInput').value = event.results[0][0].transcript;
+            };
+        }
+    </script>
 </body>
 </html>
+
 
