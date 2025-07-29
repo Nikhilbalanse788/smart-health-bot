@@ -28,7 +28,32 @@ def diagnose(symptom):
             "condition": "Indigestion or Gastric issue",
             "causes": "Overeating, food poisoning, acidity",
             "treatment": "Antacids, drink warm water, avoid oily/spicy food",
-            "advice": "If pain is severe or you have vomiting/diarrhea, consult a physician."
+            "advice": "If pain is severe or you have vomiting/diarrhea, consult a physician." 
+         "sore throat": {
+    "condition": "Throat Infection",
+    "causes": "Viral or bacterial infection, cold",
+    "treatment": "Warm salt water gargle, throat lozenges",
+    "advice": "Avoid cold foods, visit doctor if pain persists."
+},
+"cold": {
+    "condition": "Common Cold",
+    "causes": "Rhinovirus infection",
+    "treatment": "Rest, fluids, nasal drops, paracetamol",
+    "advice": "Avoid cold drinks, keep warm."
+},
+"fatigue": {
+    "condition": "Tiredness or Nutritional Deficiency",
+    "causes": "Lack of sleep, poor diet, stress",
+    "treatment": "Eat balanced food, rest, stay hydrated",
+    "advice": "If persistent, get a blood test."
+},
+"chest pain": {
+    "condition": "Could be muscular or cardiac",
+    "causes": "Muscle strain, acidity, or heart issues",
+    "treatment": "Rest, avoid exertion, antacids",
+    "advice": "If pain is sharp or with breathlessness, rush to hospital."
+}
+   
         }
     }
 
