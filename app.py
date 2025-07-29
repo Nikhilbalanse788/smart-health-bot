@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 def diagnose(symptom):
     responses = {
-          "fever": {
+        "fever": {
             "condition": "Flu or Viral Infection",
             "causes": "Infection by virus or bacteria, seasonal flu",
             "treatment": "Rest, hydration, paracetamol for fever, consult doctor if persistent",
@@ -30,14 +30,15 @@ def diagnose(symptom):
             "treatment": "Antacids, drink warm water, avoid oily/spicy food",
             "advice": "If pain is severe or you have vomiting/diarrhea, consult a physician."
         }
-        
     }
-     return responses.get(symptom.lower(), {
+
+    return responses.get(symptom.lower(), {
         "condition": "Unknown",
         "causes": "Unrecognized symptom",
         "treatment": "Consult a medical professional.",
         "advice": "Please see a doctor for accurate diagnosis."
     })
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     diagnosis = {}
@@ -45,5 +46,9 @@ def index():
         symptom = request.form.get('symptom')
         diagnosis = diagnose(symptom)
     return render_template('index.html', diagnosis=diagnosis)
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)
 
 
