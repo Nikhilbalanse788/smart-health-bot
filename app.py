@@ -1,7 +1,11 @@
 from flask import Flask, request, render_template, send_file
 import os
+from dotenv import load_dotenv   # ✅ Load environment variables
 from health_ai import diagnose_symptom
 from pdf_generator import generate_pdf_text
+
+# ✅ Load variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 
