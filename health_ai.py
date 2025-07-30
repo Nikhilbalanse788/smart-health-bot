@@ -1,7 +1,11 @@
 import openai
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
+
+
+
 
 def diagnose_symptom(symptom):
     prompt = f"Give a professional medical diagnosis, causes, treatments, and advice for the symptom: {symptom}."
