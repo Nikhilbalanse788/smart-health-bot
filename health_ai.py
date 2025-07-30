@@ -1,21 +1,11 @@
-import openai
-import os
-from dotenv import load_dotenv
+def diagnose_symptom(symptom, api_key):
+    openai.api_key = api_key  # assign API key from argument
 
-load_dotenv()
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-if not OPENAI_API_KEY:
-    raise ValueError("❌ OPENAI_API_KEY is missing in .env file!")
-
-openai.api_key = OPENAI_API_KEY
-
-def diagnose_symptom(symptom):
     prompt = f"Give a professional medical diagnosis, causes, treatments, and advice for the symptom: {symptom}."
 
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4",  # or "gpt-3.5-turbo" if your key doesn’t support GPT-4
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful AI health assistant."},
                 {"role": "user", "content": prompt}
