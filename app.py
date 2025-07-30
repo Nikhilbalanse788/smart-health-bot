@@ -1,22 +1,45 @@
-import openai
+import os
+from flask import Flask, render_template, request, send_file
+from dotenv import load_dotenv
+from health_ai import diagnose_symptom
+from pdf_generator import generate_pdf_text
 
-def diagnose_symptom(symptom, api_key):
-    prompt = f"Give a professional medical diagnosis, causes, treatments, and advice for the symptom: {symptom}."
+# Load environment variables from .env
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-    try:
-        openai.api_key = api_key
+if not OPENAI_API_KEY:
+    raise ValueError("❌ OPENAI_API_KEY is missing from .env file!")
 
-        response = openai.ChatCompletion.create(
-            model="gpt-4",  # Or gpt-3.5-turbo if needed
-            messages=[
-                {"role": "system", "content": "You are a helpful AI health assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=500
-        )
+app = Flask(__name__)
 
-        return response['choices'][0]['message']['content'].strip()
+@app.route("/", methods=["GET", "POST"])
+def index():
+    diagnosis_text = ""
+    diagnosis_data = {
+        "condition": "See below",
+        "causes": "",
+        "treatment": "",
+        "advice": ""
+    }
 
-    except Exception as e:
-        return f"❌ Error while diagnosing: {str(e)}"
+    if request.method == "POST":
+        symptom = request.form["symptom"]
+        
+        # ✅ Fix: Pass the API key to the diagnose function
+        diagnosis_text = diagnose_symptom(symptom, OPENAI_API_KEY)
+
+        # ✅ Optional: Save to PDF
+        generate_pdf_text(diagnosis_text)
+
+        # Optional: Extract structured data from response (future enhancement)
+        # Example: use regex to parse condition/causes/treatment/advice
+
+    return render_template("index.html", diagnosis=diagnosis_data, result=diagnosis_text)
+
+@app.route("/download")
+def download():
+    return send_file("diagnosis_report.pdf", as_attachment=True)
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=10000)
