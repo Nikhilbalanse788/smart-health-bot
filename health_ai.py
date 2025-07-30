@@ -1,20 +1,19 @@
+import openai
+
 def diagnose_symptom(symptom, api_key):
-    openai.api_key = api_key  # assign API key from argument
+    openai.api_key = api_key
 
-    prompt = f"Give a professional medical diagnosis, causes, treatments, and advice for the symptom: {symptom}."
+    prompt = f"""
+You are a medical assistant. A user reports the symptom: "{symptom}".
+Return a short diagnosis, likely causes, possible treatment, and health advice.
+"""
 
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are a helpful AI health assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=500
-        )
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",  # or gpt-4 if you have access
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.5,
+        max_tokens=300
+    )
 
-        return response['choices'][0]['message']['content'].strip()
-
-    except Exception as e:
-        return f"❌ Error while diagnosing: {str(e)}"
+    result = response.choices[0].message.content.strip()
+    return result
