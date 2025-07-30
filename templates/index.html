@@ -4,14 +4,6 @@
     <title>Smart Health Bot</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-            background-color: var(--bg);
-            color: var(--text);
-            transition: background 0.3s, color 0.3s;
-        }
-
         :root {
             --bg: #f2f2f2;
             --text: #000;
@@ -24,24 +16,38 @@
             --card-bg: #1e1e1e;
         }
 
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
+        }
+
         h1 {
             color: #4CAF50;
+            text-align: center;
+        }
+
+        .toggle {
+            float: right;
+            margin-top: -60px;
+            margin-right: 10px;
         }
 
         form {
             background: var(--card-bg);
             padding: 20px;
             border-radius: 10px;
-            width: 100%;
-            max-width: 500px;
+            max-width: 600px;
+            margin: 20px auto;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
         select, input[type="text"] {
             width: 100%;
             padding: 10px;
-            margin-top: 10px;
-            margin-bottom: 10px;
+            margin: 10px 0;
             border-radius: 5px;
             border: 1px solid #ccc;
         }
@@ -52,7 +58,8 @@
             color: white;
             border: none;
             border-radius: 5px;
-            margin-right: 10px;
+            margin: 5px 0;
+            cursor: pointer;
         }
 
         .result {
@@ -60,4 +67,60 @@
             background-color: var(--card-bg);
             padding: 15px;
             border-radius: 8px;
+            white-space: pre-wrap;
         }
+
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>🤖 Smart Health Bot</h1>
+    <button class="toggle" onclick="toggleDarkMode()">🌓 Toggle Dark Mode</button>
+
+    <form method="POST">
+        <label for="symptom">Select or Speak Your Symptom:</label>
+        <input type="text" id="symptom" name="symptom" placeholder="e.g. Headache, Fever" required>
+
+        <div class="center">
+            <button type="submit">Diagnose 🎯</button>
+            <button type="button" onclick="startVoiceInput()">🎤 Speak</button>
+        </div>
+    </form>
+
+    {% if result %}
+    <div class="result" id="report">
+        <h2>🩺 Diagnosis:</h2>
+        <p>{{ result }}</p>
+        <div class="center">
+            <button onclick="downloadPDF()">📄 Download PDF</button>
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        function startVoiceInput() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                document.getElementById("symptom").value = event.results[0][0].transcript;
+            };
+
+            recognition.onerror = function(event) {
+                alert("Voice input error: " + event.error);
+            };
+        }
+
+        function downloadPDF() {
+            window.location.href = "/download";
+        }
+    </script>
+</body>
+</html>
